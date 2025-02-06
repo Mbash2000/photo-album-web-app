@@ -17,14 +17,15 @@ $albums = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Albums</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="JS/script.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -57,5 +58,6 @@ $stmt->close();
             <button type="submit">Create Album</button>
         </form>
     </div>
+    
 </body>
 </html>

@@ -1,4 +1,5 @@
-<?php
+
+<?php 
 session_start();
 include 'includes/db.php';
 if (!isset($_SESSION['user_id'])) {
@@ -56,7 +57,7 @@ $stmt->close();
 <body>
     <div class="d-flex" style="min-height: 100vh;" id="div">
         <!-- Sidebar -->
-        <nav class="bg-white w-25 p-3 d-flex flex-column justify-content-between">
+        <nav class="w-25 p-3 d-flex flex-column justify-content-between">
             <div>
                 <h2 class="text-center mb-4"><i class="fas fa-camera me-2"></i>Photo Album</h2>
                 <ul class="list-unstyled">
@@ -92,7 +93,7 @@ $stmt->close();
         <!-- Main Content -->
         <main class="flex-grow-1  p-4">
             <div class="bg-white rounded shadow-sm p-4 mb-4">
-                <h1 class="mb-0">Welcome, <?= htmlspecialchars($username) ?>!</h1>
+                <h1 class="mb-0">Welcome Back, <?= htmlspecialchars($username) ?>!</h1>
             </div>
 
             <div class="row g-4">
@@ -131,3 +132,4 @@ $stmt->close();
 </body>
 
 </html>
+

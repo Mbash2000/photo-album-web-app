@@ -29,28 +29,6 @@ input {
     border-radius: 5px;
 }
 
-button {
-    padding: 10px;
-    background: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #218838;
-}
-
-a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 /* Album and Photo Styles */
 .album-item, .photo-item {
     border: 1px solid #ccc;
@@ -202,7 +180,7 @@ body {
     gap: 20px;
 }
 
-.btn {
+/*.btn {
     padding: 10px 20px;
     background: #ff6f61;
     color: #fff;
@@ -214,7 +192,6 @@ body {
 
 .btn:hover {
     background: #ff3b2f;
-    transform: scale(1.1);
     box-shadow: 0 0 15px rgba(255, 111, 97, 0.5);
 }
 /* Search Page Styles */
@@ -312,4 +289,65 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    animation: changeBackground 10s infinite;
+}
+
+@keyframes changeBackground {
+    0% { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+    50% { background: linear-gradient(135deg, #fad0c4, #ff9a9e); }
+    100% { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+}
+
+/* Sidebar Styles */
+.offcanvas {
+    width: 250px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid #ddd;
+}
+
+.sidebar-nav .nav-link {
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.sidebar-nav .nav-link:hover {
+    background: rgba(106, 17, 203, 0.1);
+}
+
+.sidebar-nav .nav-link.active {
+    background: rgba(106, 17, 203, 0.1);
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.header {
+    border-bottom: 1px solid #ddd;
+}
+
+.stat-card {
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.recent-activity .list-group-item {
+    border: none;
+    border-bottom: 1px solid #ddd;
 }

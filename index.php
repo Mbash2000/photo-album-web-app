@@ -22,8 +22,8 @@ if (isset($_SESSION['user_id'])) {
         <h1 id="welcome-text"></h1>
         <p>Manage your photos, create albums, and share memories with ease.</p>
         <div class="action-buttons">
-            <a href="login.php" class="btn">Login</a>
-            <a href="register.php" class="btn">Register</a>
+           <button> <a href="login.php">Login</a></button>
+            <button> <a href="register.php">Register</a></button>
         </div>
     </div>
 

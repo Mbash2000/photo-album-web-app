@@ -4,9 +4,17 @@ $db = 'photo_album';
 $user = 'root';
 $pass = '';
 
-$conn = new mysqli($host, $user, $pass, $db);
+try {
+    // Create a PDO instance
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Set PDO to throw exceptions on errors
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Optional: Set default fetch mode to associative array
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Handle connection errors
+    die("Connection failed: " . $e->getMessage());
 }
 ?>

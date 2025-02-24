@@ -1,25 +1,24 @@
 <?php
 session_start();
-include 'includes/db.php';
+require 'includes/db.php'; // Ensure this file initializes the $pdo object
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id, $hashed_password);
+    // Fetch user details from the database
+    $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
 
-    if ($stmt->fetch() && password_verify($password, $hashed_password)) {
-        $_SESSION['user_id'] = $id;
+    // Verify the password
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
         header("Location: dashboard.php");
+        exit();
     } else {
         $error_message = "Invalid username or password!";
     }
-
-    $stmt->close();
 }
 ?>
 
@@ -46,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" class="btn">Login</button>
         </form>
         <p>Don't have an account? <a href="register.php">Register here</a>.</p>
     </div>

@@ -96,7 +96,7 @@ function viewAlbum(albumId) {
 // Load albums when the page loads
 window.onload = loadAlbums;
 
-// Typing animation for the welcome message
+/* Typing animation for the welcome message
 const welcomeText = document.getElementById('welcome-text');
 const text = "Welcome to the Photo Album Web App";
 let index = 0;
@@ -112,7 +112,22 @@ function typeWriter() {
 // Start the typing animation when the page loads
 window.onload = () => {
     typeWriter();
-};
+};*/
+// Typing animation for the welcome message
+const welcomeText = document.getElementById('welcome-text');
+const text = "Welcome to the Photo Album App";
+let index = 0;
+
+function typeWriter() {
+    if (index < text.length) {
+        welcomeText.innerHTML += text.charAt(index);
+        index++;
+        setTimeout(typeWriter, 100); // Adjust typing speed here
+    }
+}
+
+// Start the typing animation when the page loads
+window.onload = typeWriter;
 
 // Add hover effects to buttons
 const buttons = document.querySelectorAll('.btn');
@@ -215,3 +230,104 @@ document.addEventListener('click', (event) => {
         sidebar.classList.remove('active');
     }
 });*/
+// Function to view photos in a specific album
+function viewAlbum(albumId) {
+    fetch(`get_photos.php?album_id=${albumId}`)
+        .then(response => response.json())
+        .then(data => {
+            const photoList = document.getElementById('photo-list');
+            photoList.innerHTML = ""; // Clear existing content
+
+            data.forEach(photo => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item card mb-3';
+                photoItem.innerHTML = `
+                    <img src="${photo.file_path}" class="card-img-top" alt="${photo.description}">
+                    <div class="card-body">
+                        <p class="card-text">${photo.description}</p>
+                        <p class="card-text">Tags: ${photo.tags}</p>
+                        <button class="btn btn-primary" onclick="openCommentModal(${photo.id})">Add Comment</button>
+                    </div>
+                `;
+                photoList.appendChild(photoItem);
+            });
+        })
+        .catch(error => console.error('Error loading photos:', error));
+}
+
+// Function to open the comment modal
+function openCommentModal(photoId) {
+    const modal = document.getElementById('commentModal');
+    modal.style.display = 'block';
+
+    // Handle comment submission
+    const commentForm = document.getElementById('commentForm');
+    commentForm.onsubmit = function (e) {
+        e.preventDefault();
+        const comment = commentForm.comment.value;
+
+        fetch('add_comment.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ photoId, comment }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Comment added successfully!');
+                    modal.style.display = 'none';
+                } else {
+                    alert('Error adding comment.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    };
+}
+// Function to validate the upload form
+function validateUploadForm() {
+    const fileInput = document.getElementById('photo');
+    const description = document.getElementById('description').value;
+    const tags = document.getElementById('tags').value;
+
+    if (fileInput.files.length === 0) {
+        alert("Please select a photo to upload!");
+        return false;
+    }
+
+    if (description.trim() === "") {
+        alert("Please add a description for the photo!");
+        return false;
+    }
+
+    if (tags.trim() === "") {
+        alert("Please add tags for the photo!");
+        return false;
+    }
+
+    return true;
+}
+// Function to validate the registration form
+function validateRegisterForm() {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (username.trim() === "") {
+        alert("Please enter a username!");
+        return false;
+    }
+
+    if (email.trim() === "") {
+        alert("Please enter an email!");
+        return false;
+    }
+
+    if (password.trim() === "") {
+        alert("Please enter a password!");
+        return false;
+    }
+
+    return true;
+}

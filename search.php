@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'includes/db.php';
+require 'includes/db.php'; // Ensure this file initializes the $pdo object
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -8,16 +8,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check if the 'query' parameter exists in the URL
-$search_query = isset($_GET['query']) ? $_GET['query'] : '';
+$searchQuery = $_GET['query'] ?? '';
 
 // Fetch photos based on the search query
-if (!empty($search_query)) {
-    $stmt = $conn->prepare("SELECT * FROM photos WHERE tags LIKE ? OR description LIKE ?");
-    $search_param = "%$search_query%";
-    $stmt->bind_param("ss", $search_param, $search_param);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $photos = $result->fetch_all(MYSQLI_ASSOC);
+if (!empty($searchQuery)) {
+    $searchParam = "%$searchQuery%";
+    $stmt = $pdo->prepare("SELECT * FROM photos WHERE tags LIKE ? OR description LIKE ?");
+    $stmt->execute([$searchParam, $searchParam]);
+    $photos = $stmt->fetchAll();
 } else {
     $photos = []; // No search query provided
 }
@@ -29,34 +27,47 @@ if (!empty($search_query)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Photos</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container mt-5">
         <h1>Search Photos</h1>
-        <form action="search.php" method="GET">
-            <div class="form-group">
-                <input type="text" name="query" placeholder="Enter tags or description" value="<?= htmlspecialchars($search_query) ?>">
+        <form action="search.php" method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="query" class="form-control" placeholder="Enter tags or description" value="<?= htmlspecialchars($searchQuery) ?>">
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
-            <button type="submit">Search</button>
         </form>
 
-        <?php if (!empty($search_query)): ?>
-            <h2>Results for "<?= htmlspecialchars($search_query) ?>"</h2>
+        <?php if (!empty($searchQuery)): ?>
+            <h2>Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
             <?php if (!empty($photos)): ?>
-                <div class="photo-list">
+                <div class="row">
                     <?php foreach ($photos as $photo): ?>
-                        <div class="photo-item">
-                            <img src="<?= htmlspecialchars($photo['filename']) ?>" alt="<?= htmlspecialchars($photo['description']) ?>">
-                            <p><?= htmlspecialchars($photo['description']) ?></p>
-                            <p>Tags: <?= htmlspecialchars($photo['tags']) ?></p>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="<?= htmlspecialchars($photo['filename']) ?>" class="card-img-top" alt="<?= htmlspecialchars($photo['description']) ?>">
+                                <div class="card-body">
+                                    <p class="card-text"><?= htmlspecialchars($photo['description']) ?></p>
+                                    <p class="card-text"><small class="text-muted">Tags: <?= htmlspecialchars($photo['tags']) ?></small></p>
+                                </div>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <p>No photos found.</p>
+                <p class="text-center">No photos found.</p>
             <?php endif; ?>
         <?php endif; ?>
     </div>
+
+    <!-- Bootstrap 5 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
-</html>s
+</html>
